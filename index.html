@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MarketPulse Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="error-boundary" id="errorBoundary" hidden>
+      <span>Something went wrong.</span>
+      <button class="ghost-button" type="button" id="dismissErrorBoundary">Dismiss</button>
+    </div>
+    <div class="shell">
+      <aside class="sidebar" aria-label="Primary">
+        <div class="brand">
+          <div class="brand-mark">MP</div>
+          <div>
+            <strong>MarketPulse</strong>
+            <span>Pro terminal</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active" data-view="dashboard" aria-label="Dashboard">
+            <span class="icon">D</span><span>Dashboard</span>
+          </button>
+          <button class="nav-item" data-view="scanner" aria-label="Scanner">
+            <span class="icon">S</span><span>Scanner</span>
+          </button>
+          <button class="nav-item" data-view="strategy" aria-label="Strategy">
+            <span class="icon">P</span><span>Strategy</span>
+          </button>
+          <button class="nav-item" data-view="portfolio" aria-label="Portfolio">
+            <span class="icon">W</span><span>Portfolio</span>
+          </button>
+          <button class="nav-item" data-view="alerts" aria-label="Alerts">
+            <span class="icon">A</span><span>Alerts</span>
+          </button>
+          <button class="nav-item" data-view="billing" aria-label="Billing">
+            <span class="icon">B</span><span>Billing</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-panel">
+          <span class="eyebrow">Risk mode</span>
+          <div class="segmented" role="group" aria-label="Risk mode">
+            <button class="segment active" data-risk="balanced">Bal</button>
+            <button class="segment" data-risk="aggressive">Agg</button>
+          </div>
+          <div class="mini-stat">
+            <span>Capital</span>
+            <strong id="capitalMini">Rs 100,000</strong>
+          </div>
+          <div class="mini-stat">
+            <span>User</span>
+            <strong id="userMini">Guest</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">AI-assisted market intelligence</p>
+            <h1>MarketPulse Pro</h1>
+          </div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Market</span>
+              <select id="symbolSearch" aria-label="Market selector"></select>
+            </label>
+            <button class="ghost-button" id="liveToggle">Free data: On</button>
+            <button class="ghost-button" id="educationToggle">Education: Off</button>
+            <button class="ghost-button" id="demoToggle">Demo mode</button>
+            <button class="icon-button" id="themeToggle" aria-label="Toggle theme">T</button>
+            <button class="primary-button" data-view-jump="billing">Upgrade</button>
+          </div>
+        </header>
+
+        <section class="risk-strip" role="note">
+          MarketPulse Pro provides educational analysis only. Free public data can be delayed or unavailable, and live trading decisions remain your responsibility.
+        </section>
+
+        <section class="view active" id="dashboard">
+          <div class="account-strip">
+            <div class="account-copy">
+              <span class="eyebrow">Workspace</span>
+              <strong id="accountStatus">Guest workspace</strong>
+              <p>Demo sign-in saves preferences locally only. Production auth must use HTTPS, HttpOnly cookies, CSRF protection, and backend validation.</p>
+            </div>
+            <form id="authForm" class="auth-form" novalidate>
+              <div class="auth-error" id="authError" role="alert" tabindex="-1" hidden></div>
+              <label for="authName">Name
+                <input id="authName" name="name" placeholder="Your name" autocomplete="name" required aria-required="true" />
+              </label>
+              <label for="authEmail">Email
+                <input id="authEmail" name="email" placeholder="you@example.com" type="email" autocomplete="email" required aria-required="true" />
+              </label>
+              <label for="authPassword">Password
+                <input id="authPassword" name="password" placeholder="Minimum 8 characters" type="password" autocomplete="current-password" minlength="8" required aria-required="true" />
+              </label>
+              <div class="otp-section" id="otpSection" hidden>
+                <div class="otp-copy">
+                  <strong>Verify one-time code</strong>
+                  <span id="otpHint">Enter the 6-digit code sent to your email.</span>
+                </div>
+                <label for="authOtp">One-time code
+                  <input id="authOtp" name="otp" placeholder="123456" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" />
+                </label>
+                <div class="otp-actions">
+                  <button class="ghost-button" type="button" id="verifyOtpButton">Verify OTP</button>
+                  <button class="ghost-button" type="button" id="resendOtpButton">Resend code</button>
+                </div>
+              </div>
+              <div class="auth-actions">
+                <button class="ghost-button" type="submit" id="sendOtpButton">Login / Send OTP</button>
+                <button class="ghost-button" type="button" id="logoutButton">Logout</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="hero-band">
+            <div class="hero-copy">
+              <span class="status-pill" id="marketStatus">India market simulation</span>
+              <h2 id="assetTitle">NIFTY 50 Index</h2>
+              <p id="assetSummary">Cross-timeframe trend and volatility engine for index, stock, and crypto traders.</p>
+              <div class="hero-metrics">
+                <div><span>Signal</span><strong id="signalText">Loading</strong></div>
+                <div><span>Timeframe</span><strong id="timeframeText">Loading</strong></div>
+                <div><span>Setup score</span><strong id="setupScoreText">0/100</strong></div>
+              </div>
+            </div>
+            <div class="chart-stage">
+              <div class="chart-head">
+                <span id="chartSymbol">NIFTY50</span>
+                <strong id="chartPrice">Rs 0</strong>
+              </div>
+              <div id="tradingViewChart" class="tradingview-frame"></div>
+            </div>
+          </div>
+
+          <div class="grid metrics-grid indicator-grid">
+            <article class="metric-card" title="RSI estimates whether recent price momentum is stretched or balanced.">
+              <span>RSI</span>
+              <strong id="rsiValue">0</strong>
+              <small id="rsiCopy">Waiting for data</small>
+            </article>
+            <article class="metric-card" title="MACD compares fast and slow moving averages to read momentum direction.">
+              <span>MACD</span>
+              <strong id="macdValue">Flat</strong>
+              <small id="macdCopy">No momentum reading</small>
+            </article>
+            <article class="metric-card" title="Volume trend compares recent participation with its recent baseline.">
+              <span>Volume trend</span>
+              <strong id="volumeTrend">Neutral</strong>
+              <small id="volumeCopy">Volume model</small>
+            </article>
+            <article class="metric-card" title="EMA crossover compares EMA 20 with EMA 50 to read trend structure.">
+              <span>MA crossover</span>
+              <strong id="maStatus">Neutral</strong>
+              <small id="maCopy">EMA 20 vs EMA 50</small>
+            </article>
+            <article class="metric-card" title="Volatility score estimates recent movement range. Higher means wider swings.">
+              <span>Volatility score</span>
+              <strong id="volatilityScore">0</strong>
+              <small id="volatilityCopy">Measured range</small>
+            </article>
+            <article class="metric-card" title="Risk meter combines volatility, RSI extremes, and recent movement.">
+              <span>Risk meter</span>
+              <div class="meter"><span id="riskMeter"></span></div>
+              <small id="riskCopy">Balanced exposure</small>
+            </article>
+            <article class="metric-card" title="Sentiment gauge is a rules-based mix of setup score, trend, volume, and liquidity.">
+              <span>Market sentiment</span>
+              <div class="gauge" id="sentimentGauge"><strong>0</strong></div>
+              <small id="sentimentCopy">Breadth and momentum mix</small>
+            </article>
+            <article class="metric-card">
+              <span>Data source</span>
+              <strong id="dataSource">Starter</strong>
+              <small id="dataFreshness">Refresh to update</small>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Advisor</span>
+                  <h3>Trade Style Fit</h3>
+                </div>
+                <button class="ghost-button" id="refreshAnalysis">Refresh</button>
+              </div>
+              <div class="advisor" id="advisorCards"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Probability model</span>
+                  <h3>Trade Horizon Fit</h3>
+                </div>
+                <span class="badge">Indicator based</span>
+              </div>
+              <div class="probability-list" id="probabilityBars"></div>
+            </section>
+          </div>
+
+          <div class="two-column dashboard-stack">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Explanation</span>
+                  <h3>Mini AI Read</h3>
+                </div>
+                <span class="badge" id="explainBadge">Plain English</span>
+              </div>
+              <p class="ai-copy" id="aiExplanation">Waiting for market data.</p>
+              <details class="why-box">
+                <summary>Why this signal?</summary>
+                <ul id="whySignal"></ul>
+              </details>
+              <details class="why-box">
+                <summary>How score is calculated</summary>
+                <p class="fine-print" id="scoreFormula">Setup score uses RSI, MACD, EMA crossover, trend, volume, and volatility control.</p>
+              </details>
+              <div class="education-panel" id="educationPanel" hidden>
+                <strong>Beginner mode</strong>
+                <p>RSI measures whether price momentum is stretched. MACD measures momentum direction. EMA crossover compares short-term trend with medium-term trend. The setup score combines these into a rules-based quality reading, not a prediction.</p>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Sector breadth</span>
+                  <h3>Top Gaining Sectors</h3>
+                </div>
+                <span class="badge">Model</span>
+              </div>
+              <div class="sector-list" id="sectorList"></div>
+            </section>
+          </div>
+
+          <div class="two-column dashboard-stack">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Historical validation</span>
+                  <h3>Similar Setup Review</h3>
+                </div>
+                <span class="badge">Careful stats</span>
+              </div>
+              <div class="validation-grid" id="validationStats"></div>
+              <p class="fine-print">Historical validation is descriptive only. It does not predict the next trade and can change when data quality improves.</p>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Comparison</span>
+                  <h3>Multi-Market Ranking</h3>
+                </div>
+                <select id="comparisonSort" class="compact-select" aria-label="Comparison sort">
+                  <option value="setup">Setup quality</option>
+                  <option value="trend">Trend strength</option>
+                  <option value="volatility">Volatility</option>
+                </select>
+              </div>
+              <div class="comparison-table" id="comparisonTable"></div>
+            </section>
+          </div>
+
+          <div class="two-column dashboard-stack">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Risk desk</span>
+                  <h3>Position Builder</h3>
+                </div>
+                <span class="badge" id="positionBadge">Balanced</span>
+              </div>
+              <div class="form-grid">
+                <label>Capital<input type="number" id="capitalInput" value="100000" min="1000" step="1000" /></label>
+                <label>Risk %<input type="number" id="riskInput" value="1" min="0.1" max="5" step="0.1" /></label>
+                <label>Entry<input type="number" id="entryInput" value="0" step="0.01" /></label>
+                <label>Stop loss<input type="number" id="stopInput" value="0" step="0.01" /></label>
+              </div>
+              <div class="position-output">
+                <div><span>Risk amount</span><strong id="riskAmount">Rs 0</strong></div>
+                <div><span>Quantity</span><strong id="quantityText">0</strong></div>
+                <div><span>Target zone</span><strong id="targetText">Rs 0</strong></div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="scanner">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Scanner</span>
+              <h2>Market Growth Radar</h2>
+            </div>
+            <div class="segmented filters">
+              <button class="segment active" data-filter="all">All</button>
+              <button class="segment" data-filter="indices">Index</button>
+              <button class="segment" data-filter="crypto">Crypto</button>
+              <button class="segment" data-filter="stocks">Stocks</button>
+              <button class="segment" data-filter="india">India</button>
+            </div>
+          </div>
+          <div class="scanner-table" id="scannerTable"></div>
+        </section>
+
+        <section class="view" id="strategy">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Strategy lab</span>
+              <h2>Execution Playbook</h2>
+            </div>
+            <button class="primary-button" id="savePlan">Save plan</button>
+          </div>
+          <div class="strategy-layout">
+            <section class="panel">
+              <h3>Setup Builder</h3>
+              <div class="form-grid">
+                <label>Trading style
+                  <select id="styleSelect">
+                    <option>Intraday</option>
+                    <option>Swing</option>
+                    <option>Mid-term</option>
+                    <option>Long-term</option>
+                  </select>
+                </label>
+                <label>Market
+                  <select id="marketSelect">
+                    <option>Crypto</option>
+                    <option selected>Indian indices</option>
+                    <option>Indian equities</option>
+                    <option>US equities</option>
+                    <option>Commodities</option>
+                  </select>
+                </label>
+                <label>Max trades/day<input type="number" id="tradeCount" value="2" min="1" max="12" /></label>
+                <label>Max drawdown %<input type="number" id="drawdownInput" value="6" min="1" max="30" /></label>
+              </div>
+            </section>
+            <section class="panel plan-output">
+              <h3>Plan</h3>
+              <div id="planOutput"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="portfolio">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Portfolio</span>
+              <h2>Watchlist & Alerts</h2>
+            </div>
+            <button class="ghost-button" id="addCurrent">Add selected</button>
+          </div>
+          <div class="watchlist" id="watchlist"></div>
+        </section>
+
+        <section class="view" id="alerts">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Smart alerts</span>
+              <h2>Rules & Notifications</h2>
+            </div>
+            <button class="primary-button" id="saveAlertPrefs">Save alert rules</button>
+          </div>
+          <div class="two-column">
+            <section class="panel">
+              <h3>Alert Rules</h3>
+              <div class="toggle-list">
+                <label><input type="checkbox" id="alertSetup" checked /> Setup score changes by 10+ points</label>
+                <label><input type="checkbox" id="alertRsi" checked /> RSI enters overbought or oversold zone</label>
+                <label><input type="checkbox" id="alertEma" checked /> EMA 20 / EMA 50 crossover changes</label>
+                <label><input type="checkbox" id="alertVolatility" checked /> Volatility spike detected</label>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">Current market</span>
+                  <h3>Triggered Alerts</h3>
+                </div>
+                <span class="badge" id="alertCount">0 active</span>
+              </div>
+              <div class="alert-list" id="alertList"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="billing">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Premium access</span>
+              <h2>Plans & Payments</h2>
+            </div>
+            <span class="badge">Razorpay / Stripe ready</span>
+          </div>
+          <div class="pricing">
+            <article class="price-card">
+              <span class="eyebrow">Starter</span>
+              <h3>Free</h3>
+              <strong>Rs 0</strong>
+              <p>Delayed analysis, limited scanner, paper trading.</p>
+              <button class="ghost-button">Current</button>
+            </article>
+            <article class="price-card featured">
+              <span class="eyebrow">Pro</span>
+              <h3>Active trader</h3>
+              <strong>Rs 999/mo</strong>
+              <p>Full radar, strategy desk, watchlist alerts, risk sizing.</p>
+              <button class="primary-button">Pay with Razorpay</button>
+            </article>
+            <article class="price-card">
+              <span class="eyebrow">Desk</span>
+              <h3>Team</h3>
+              <strong>Rs 4,999/mo</strong>
+              <p>Multi-user dashboards, reports, broker integrations.</p>
+              <button class="ghost-button">Contact</button>
+            </article>
+          </div>
+          <div class="premium-grid">
+            <article class="locked-card">
+              <span class="eyebrow">Locked</span>
+              <h3>Advanced analytics</h3>
+              <p>Deeper multi-timeframe validation, regime filters, and exportable reports.</p>
+            </article>
+            <article class="locked-card">
+              <span class="eyebrow">Locked</span>
+              <h3>Saved alerts</h3>
+              <p>Persistent server-side rules, email/web push delivery, and alert history.</p>
+            </article>
+            <article class="locked-card">
+              <span class="eyebrow">Locked</span>
+              <h3>Multi-watchlist</h3>
+              <p>Separate watchlists for intraday, swing, crypto, indices, and long-term research.</p>
+            </article>
+            <article class="locked-card">
+              <span class="eyebrow">Locked</span>
+              <h3>Advanced scanner</h3>
+              <p>Cross-market filters for RSI, EMA, MACD, sector strength, and volatility regimes.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="onboarding" id="onboarding" hidden>
+      <div class="onboarding-panel">
+        <span class="eyebrow">Public demo walkthrough</span>
+        <h2 id="onboardingTitle">Start with a market</h2>
+        <p id="onboardingCopy">Use the Market dropdown to switch between NIFTY, BANKNIFTY, crypto, stocks, and commodities.</p>
+        <div class="onboarding-actions">
+          <button class="ghost-button" id="skipOnboarding">Skip</button>
+          <button class="primary-button" id="nextOnboarding">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="ai-helper" id="aiHelper" aria-label="Login and data helper">
+      <button class="ai-helper-toggle" id="aiHelpToggle" type="button" aria-expanded="false" aria-controls="aiHelpPanel">Help</button>
+      <div class="ai-helper-panel" id="aiHelpPanel" role="dialog" aria-labelledby="aiHelpTitle" hidden>
+        <div class="ai-helper-head">
+          <div>
+            <span class="eyebrow">Private helper</span>
+            <h2 id="aiHelpTitle">Login support</h2>
+          </div>
+          <button class="icon-button" id="aiHelpClose" type="button" aria-label="Close helper">X</button>
+        </div>
+        <p class="ai-helper-note">Local guidance only. Do not enter passwords or OTP codes here.</p>
+        <div class="ai-helper-topics" aria-label="Quick helper topics">
+          <button type="button" data-help-topic="otp">OTP not received</button>
+          <button type="button" data-help-topic="wrongCode">Wrong code</button>
+          <button type="button" data-help-topic="session">Refresh login</button>
+          <button type="button" data-help-topic="security">Privacy</button>
+        </div>
+        <div class="ai-helper-messages" id="aiHelpMessages" aria-live="polite">
+          Choose a topic or ask a short login question.
+        </div>
+        <label for="aiHelpInput" class="sr-only">Ask helper</label>
+        <div class="ai-helper-ask">
+          <input id="aiHelpInput" type="text" maxlength="160" autocomplete="off" placeholder="Ask about OTP or login" />
+          <button class="ghost-button" id="aiHelpAsk" type="button">Ask</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="config/runtime-config.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/logger.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/indicators.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/alerts.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/demo.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

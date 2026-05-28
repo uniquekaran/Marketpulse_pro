@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MarketPulse Pro</string>
+    <string name="loading_dashboard">Loading dashboard...</string>
+    <string name="internet_error">Connection problem. Check internet or backend server, then retry.</string>
+</resources>

@@ -1,0 +1,16 @@
+{
+  "name": "marketpulse-pro",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Explainable market analysis dashboard prototype prepared for public demo testing.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node tests/run-tests.cjs",
+    "check": "node tests/run-tests.cjs",
+    "build": "node scripts/build-check.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
