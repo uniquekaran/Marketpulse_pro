@@ -61,6 +61,7 @@ public class MainActivity extends Activity {
         root.addView(loadingOverlay);
         root.addView(errorOverlay);
         errorOverlay.setVisibility(View.GONE);
+        loadingOverlay.setVisibility(View.GONE);
 
         setContentView(root);
 
@@ -137,6 +138,12 @@ public class MainActivity extends Activity {
             }
 
             @Override
+            public void onPageCommitVisible(WebView view, String url) {
+                pageLoaded = true;
+                hideLoading();
+            }
+
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
                 String scheme = uri.getScheme();
@@ -155,14 +162,14 @@ public class MainActivity extends Activity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 if (request.isForMainFrame()) {
-                    showError(isOnline() ? "Dashboard failed to load. Start the backend server and retry." : "No internet connection. Check network and retry.");
+                    showError(isOnline() ? "Dashboard failed to load. Please check the URL and retry." : "No internet connection. Check network and retry.");
                 }
             }
 
             @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, android.webkit.WebResourceResponse errorResponse) {
                 if (request.isForMainFrame()) {
-                    showError("Server returned an error. Check the dashboard backend and retry.");
+                    showError("Server returned an error. Please try again later.");
                 }
             }
         });
@@ -265,10 +272,13 @@ public class MainActivity extends Activity {
     }
 
     private void showLoading() {
+        if (pageLoaded) return;
+        loadingOverlay.setClickable(true);
         loadingOverlay.setVisibility(View.VISIBLE);
     }
 
     private void hideLoading() {
+        loadingOverlay.setClickable(false);
         loadingOverlay.setVisibility(View.GONE);
     }
 

@@ -266,6 +266,10 @@
     ui.$("#onboarding").hidden = true;
   }
 
+  function shouldAutoShowOnboarding() {
+    return window.matchMedia("(min-width: 761px)").matches;
+  }
+
   function showHelperMessage(message) {
     const box = ui.$("#aiHelpMessages");
     if (!box) return;
@@ -554,7 +558,7 @@
     renderAll();
     window.MPAnalytics.retentionSeen();
     window.MPAnalytics.marketViewed(state.symbol);
-    if (!state.onboardingSeen) showOnboarding();
+    if (!state.onboardingSeen && shouldAutoShowOnboarding()) showOnboarding();
   }
 
   init();

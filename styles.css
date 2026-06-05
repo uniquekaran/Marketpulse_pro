@@ -1277,22 +1277,19 @@ select {
   }
 
   .sidebar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    position: static;
     z-index: var(--z-sidebar);
     width: 100%;
     height: auto;
     display: block;
     border-right: 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 0;
-    padding: 8px 10px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    border-top: 0;
+    border-bottom: 1px solid var(--line);
+    padding: calc(8px + env(safe-area-inset-top)) 10px 8px;
     background: color-mix(in srgb, var(--surface) 96%, transparent);
     overflow-x: auto;
     overflow-y: hidden;
-    box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
   }
 
   .brand {
@@ -1340,13 +1337,13 @@ select {
   }
 
   .main {
-    padding: 16px 14px calc(108px + env(safe-area-inset-bottom));
+    padding: 16px 14px calc(24px + env(safe-area-inset-bottom));
     overflow-x: clip;
   }
 
   .ai-helper {
     right: 12px;
-    bottom: calc(104px + env(safe-area-inset-bottom));
+    bottom: calc(24px + env(safe-area-inset-bottom));
     width: min(380px, calc(100% - 24px));
   }
 
@@ -1455,12 +1452,12 @@ select {
 
   .toast {
     right: 16px;
-    bottom: calc(104px + env(safe-area-inset-bottom));
+    bottom: calc(24px + env(safe-area-inset-bottom));
   }
 
   .onboarding {
     align-items: end;
-    padding: 14px 14px calc(110px + env(safe-area-inset-bottom));
+    padding: 14px 14px calc(24px + env(safe-area-inset-bottom));
   }
 
   .onboarding-panel {
