@@ -4,5 +4,6 @@ node_modules/
 *.log
 android/MarketPulseProAndroid/keystore.properties
 android/MarketPulseProAndroid/release/
+android/MarketPulseProAndroid/build/
 android/MarketPulseProAndroid/app/build/
 android/MarketPulseProAndroid/.gradle/
